@@ -3,8 +3,7 @@ package com.parkinglot;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestParkingLot {
     ParkingLotSystem parkingLotSystem;
@@ -42,10 +41,12 @@ public class TestParkingLot {
 
     @Test
     public void givenWhenParkingLotIsFull_ShouldInformTheOwner() {
+        Object vehicle2 = new Object();
         ParkingLotOwner owner = new ParkingLotOwner();
         parkingLotSystem.registerObserver(owner);
         try {
             parkingLotSystem.park(vehicle);
+            parkingLotSystem.park(new Object());
             parkingLotSystem.park(new Object());
         } catch (ParkingLotException e) {
             boolean capacityFull = owner.isCapacityFull();
@@ -71,9 +72,30 @@ public class TestParkingLot {
         try {
             parkingLotSystem.park(vehicle);
             parkingLotSystem.park(new Object());
+            parkingLotSystem.park(new Object());
         } catch (ParkingLotException e) {
             boolean capacityFull = airportSecurity.isCapacityFull();
             assertTrue(capacityFull);
         }
+    }
+
+    @Test
+    public void givenVehicle_WhenLotSpaceIsAvailableAfterFull_ShouldInformTheOwnerAndReturnFalse() {
+        Object vehicle2 = new Object();
+        ParkingLotOwner owner = new ParkingLotOwner();
+        parkingLotSystem.registerObserver(owner);
+        parkingLotSystem.park(vehicle);
+        parkingLotSystem.park(vehicle2);
+        parkingLotSystem.unPark(vehicle);
+        assertFalse(owner.isCapacityFull());
+    }
+
+    @Test
+    public void givenVehicle_WhenLotSpaceIsAvailableAfterFull_ShouldInformTheAirPortSecurityAndReturnFalse() {
+        AirportSecurity airportSecurity = new AirportSecurity();
+        parkingLotSystem.registerObserver(airportSecurity);
+        parkingLotSystem.park(vehicle);
+        parkingLotSystem.unPark(vehicle);
+        assertFalse(airportSecurity.isCapacityFull());
     }
 }

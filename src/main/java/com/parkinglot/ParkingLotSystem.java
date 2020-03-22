@@ -23,7 +23,7 @@ public class ParkingLotSystem {
             throw new ParkingLotException("vehicle already parked",ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
         if (vehicles.size()==actualCapacity) {
             for (ParkingLotObservers observer : observersList)
-                observer.capacityIsFull();
+                observer.setCapacityFull();
             throw new ParkingLotException("parkinglot is full",ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
         }
         this.vehicles.add(vehicle);

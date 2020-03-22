@@ -4,7 +4,7 @@ public class AirportSecurity implements ParkingLotObservers {
     private boolean isFullCapacity;
 
     @Override
-    public void capacityIsFull() {
+    public void setCapacityFull() {
         isFullCapacity = true;
     }
 
