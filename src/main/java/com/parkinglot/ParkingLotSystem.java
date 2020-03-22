@@ -1,17 +1,48 @@
 package com.parkinglot;
 
-public class ParkingLotSystem {
-    private Object vehicle;
+import java.util.ArrayList;
+import java.util.List;
 
-    public boolean park(Object vehicle) {
-        this.vehicle=vehicle;
-        return true;
+public class ParkingLotSystem {
+    private int actualCapacity;
+    private ParkingLotOwner owner;
+    private List vehicles;
+
+    public ParkingLotSystem(int actualCapacity) {
+        this.actualCapacity = actualCapacity;
+        this.vehicles = new ArrayList();
     }
+
+    public void registerOwner(ParkingLotOwner owner) {
+        this.owner = owner;
+    }
+
+    public void setActualCapacity(int capacity) {
+        this.actualCapacity = capacity;
+    }
+
+    public void park(Object vehicle) throws ParkingLotException {
+        if (this.vehicles.size() == this.actualCapacity) {
+            owner.capacityIsFull();
+            throw new ParkingLotException("parkinglot is full");
+        }
+        if (isVehicalParked(vehicle))
+            throw new ParkingLotException("vehicle already parked");
+        this.vehicles.add(vehicle);
+    }
+
     public boolean unPark(Object vehicle) {
-        if (this.vehicle.equals(vehicle)) {
-            this.vehicle=null;
+        if (this.vehicles.contains(vehicle)) {
+            this.vehicles.remove(vehicle);
             return true;
         }
         return false;
     }
+
+    public boolean isVehicalParked(Object vehicle) {
+        if (this.vehicles.contains(vehicle))
+            return true;
+        return false;
+    }
+
 }
