@@ -24,7 +24,7 @@ public class TestParkingLot {
     }
 
     @Test
-    public void givenVechical_WhenAlReadyParked_ShouldReturnFalse() {
+    public void givenVehicle_WhenAlReadyParked_ShouldReturnFalse() {
         try {
             parkingLotSystem.park(vehicle);
             parkingLotSystem.park(new Object());
@@ -54,7 +54,7 @@ public class TestParkingLot {
     }
 
     @Test
-    public void givenCapacityIs2_ShouldAbleToPark2Vechile() {
+    public void givenCapacityIs2_ShouldAbleToPark2Vehicle() {
         Object vehicle2 = new Object();
         parkingLotSystem.setActualCapacity(2);
         parkingLotSystem.park(vehicle);
@@ -63,5 +63,17 @@ public class TestParkingLot {
         boolean isParked2 = parkingLotSystem.isVehicalParked(vehicle2);
         assertTrue(isParked1 && isParked2);
     }
-}
 
+    @Test
+    public void givenWhenLotIsFull_ShouldInformTheSecurity() {
+        AirportSecurity airportSecurity = new AirportSecurity();
+        parkingLotSystem.registerSecurity(airportSecurity);
+        try {
+            parkingLotSystem.park(vehicle);
+            parkingLotSystem.park(new Object());
+        } catch (ParkingLotException e) {
+            boolean capacityFull = airportSecurity.isCapacityFull();
+            assertTrue(capacityFull);
+        }
+    }
+}

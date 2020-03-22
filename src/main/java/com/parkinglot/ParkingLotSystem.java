@@ -6,6 +6,7 @@ import java.util.List;
 public class ParkingLotSystem {
     private int actualCapacity;
     private ParkingLotOwner owner;
+    private AirportSecurity security;
     private List vehicles;
 
     public ParkingLotSystem(int actualCapacity) {
@@ -15,6 +16,9 @@ public class ParkingLotSystem {
 
     public void registerOwner(ParkingLotOwner owner) {
         this.owner = owner;
+    }
+    public void registerSecurity(AirportSecurity airportSecurity) {
+        this.security =airportSecurity;
     }
 
     public void setActualCapacity(int capacity) {
