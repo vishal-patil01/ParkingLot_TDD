@@ -5,20 +5,13 @@ import java.util.List;
 
 public class ParkingLotSystem {
     private int actualCapacity;
-    private ParkingLotOwner owner;
-    private AirportSecurity security;
+    private List<ParkingLotObservers> observersList;
     private List vehicles;
 
     public ParkingLotSystem(int actualCapacity) {
         this.actualCapacity = actualCapacity;
         this.vehicles = new ArrayList();
-    }
-
-    public void registerOwner(ParkingLotOwner owner) {
-        this.owner = owner;
-    }
-    public void registerSecurity(AirportSecurity airportSecurity) {
-        this.security =airportSecurity;
+        this.observersList = new ArrayList<>();
     }
 
     public void setActualCapacity(int capacity) {
@@ -26,12 +19,13 @@ public class ParkingLotSystem {
     }
 
     public void park(Object vehicle) throws ParkingLotException {
-        if (this.vehicles.size() == this.actualCapacity) {
-            owner.capacityIsFull();
-            throw new ParkingLotException("parkinglot is full");
+        if (isVehicleParked(vehicle))
+            throw new ParkingLotException("vehicle already parked",ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
+        if (vehicles.size()==actualCapacity) {
+            for (ParkingLotObservers observer : observersList)
+                observer.capacityIsFull();
+            throw new ParkingLotException("parkinglot is full",ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
         }
-        if (isVehicalParked(vehicle))
-            throw new ParkingLotException("vehicle already parked");
         this.vehicles.add(vehicle);
     }
 
@@ -43,10 +37,11 @@ public class ParkingLotSystem {
         return false;
     }
 
-    public boolean isVehicalParked(Object vehicle) {
-        if (this.vehicles.contains(vehicle))
-            return true;
-        return false;
+    public boolean isVehicleParked(Object vehicle) {
+        return this.vehicles.contains(vehicle);
     }
 
+    public void registerObserver(ParkingLotObservers observer) {
+        observersList.add(observer);
+    }
 }
