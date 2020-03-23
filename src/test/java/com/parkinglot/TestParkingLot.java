@@ -3,6 +3,9 @@ package com.parkinglot;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class TestParkingLot {
@@ -97,5 +100,47 @@ public class TestParkingLot {
         parkingLotSystem.park(vehicle);
         parkingLotSystem.unPark(vehicle);
         assertFalse(airportSecurity.isCapacityFull());
+    }
+
+    //UC6
+    @Test
+    public void givenParkingLotCapacity_WhenInitialize_ShouldReturnParkingCapacity() {
+        parkingLotSystem.setActualCapacity(10);
+        int parkingLotCapacity = parkingLotSystem.initializeParkingLot();
+        assertEquals(10, parkingLotCapacity);
+    }
+
+    @Test
+    public void givenParkingLot_ShouldReturnAvailableSlots() {
+        List expectedList = new ArrayList();
+        expectedList.add(0);
+        expectedList.add(1);
+        parkingLotSystem.setActualCapacity(2);
+        parkingLotSystem.initializeParkingLot();
+        ArrayList emptySlotList = parkingLotSystem.getSlot();
+        assertEquals(expectedList, emptySlotList);
+    }
+
+    @Test
+    public void AfterParkingAndUnParkingVehicles_ShouldReturnAvailableSlots() {
+        List expectedList = new ArrayList();
+        expectedList.add(0);
+        expectedList.add(2);
+        parkingLotSystem.setActualCapacity(3);
+        parkingLotSystem.parkVehicle(0, vehicle);
+        parkingLotSystem.parkVehicle(1, new Object());
+        parkingLotSystem.unPark(vehicle);
+        ArrayList emptySlotList = parkingLotSystem.getSlot();
+        assertEquals(expectedList, emptySlotList);
+    }
+
+    @Test
+    public void givenVehicleForParkingOnEmptySlot_WhenParkWithProvidedEmptySlot_ShouldReturnTrue() {
+        parkingLotSystem.setActualCapacity(10);
+        parkingLotSystem.initializeParkingLot();
+        ArrayList<Integer> emptySlotList = parkingLotSystem.getSlot();
+        parkingLotSystem.parkVehicle(emptySlotList.get(0), vehicle);
+        boolean vehiclePark = parkingLotSystem.isVehicleParked(vehicle);
+        assertTrue(vehiclePark);
     }
 }
