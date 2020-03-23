@@ -173,4 +173,19 @@ public class TestParkingLot {
         int parkingTime = parkingLotSystem.park(vehicle);
         assertEquals(owner.getParkingTime(), parkingTime);
     }
+
+    //UC9
+    @Test
+    public void givenMultipleCarsLessThanActualCapacity_WhenParkEvenly_shouldReturnLastIndexEmpty() {
+        parkingLotSystem.setActualCapacity(5);
+        parkingLotSystem.park(vehicle);
+        parkingLotSystem.park(new Object());
+        parkingLotSystem.park(new Object());
+        parkingLotSystem.park(new Object());
+        parkingLotSystem.unPark(vehicle);
+        parkingLotSystem.park(new Object());
+        Object lastEmptySlot = parkingLotSystem.getEmptyParkingSlot().get(0);
+        System.out.println(parkingLotSystem.vehicles);
+        assertEquals(4, lastEmptySlot);
+    }
 }

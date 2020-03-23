@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static java.util.Collections.reverseOrder;
+import static java.util.Collections.sort;
+
 public class ParkingLotSystem {
     ParkingLotOwner owner = new ParkingLotOwner();
     private int actualCapacity;
@@ -36,10 +39,23 @@ public class ParkingLotSystem {
                 observer.setCapacityFull();
             throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
         }
-        int parkingNumber = (slots.length == 0) ? slot++ : slots[0];
-        this.vehicles.set(parkingNumber, vehicle);
+        getAutoParkingLocation(vehicle, slots);
         observersList.get(0).setParkingTime(LocalDateTime.now().getMinute());
         return LocalDateTime.now().getMinute();
+    }
+
+    public List parkingAttender() {
+        sort(getEmptyParkingSlot(), reverseOrder());
+        return getEmptyParkingSlot();
+    }
+
+    public void getAutoParkingLocation(Object vehicle, int... slots) {
+        if (slots.length == 0) {
+            int autoParkingLocation = (int) parkingAttender().get(0);
+            this.vehicles.set(autoParkingLocation, vehicle);
+            return;
+        }
+        this.vehicles.set(slots[0], vehicle);
     }
 
     public boolean unPark(Object vehicle) {
