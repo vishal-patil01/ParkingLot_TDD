@@ -127,8 +127,8 @@ public class TestParkingLot {
         expectedList.add(0);
         expectedList.add(2);
         parkingLotSystem.setActualCapacity(3);
-        parkingLotSystem.parkVehicle(0, vehicle);
-        parkingLotSystem.parkVehicle(1, new Object());
+        parkingLotSystem.park(0, vehicle);
+        parkingLotSystem.park(1, new Object());
         parkingLotSystem.unPark(vehicle);
         ArrayList emptySlotList = parkingLotSystem.getSlot();
         assertEquals(expectedList, emptySlotList);
@@ -139,8 +139,27 @@ public class TestParkingLot {
         parkingLotSystem.setActualCapacity(10);
         parkingLotSystem.initializeParkingLot();
         ArrayList<Integer> emptySlotList = parkingLotSystem.getSlot();
-        parkingLotSystem.parkVehicle(emptySlotList.get(0), vehicle);
+        parkingLotSystem.park(emptySlotList.get(0), vehicle);
         boolean vehiclePark = parkingLotSystem.isVehicleParked(vehicle);
         assertTrue(vehiclePark);
+    }
+
+    //UC7
+    @Test
+    public void givenVehicle_WhenVehicleFound_ShouldReturnVehicleParkingSlotNumber() {
+        parkingLotSystem.park(new Object());
+        parkingLotSystem.park(vehicle);
+        int slotNumber = parkingLotSystem.findVehicle(vehicle);
+        assertEquals(1, slotNumber);
+    }
+
+    @Test
+    public void givenVehicle_WhenVehicleNotFound_ShouldThrowVehicleNotFoundException() {
+        parkingLotSystem.park(vehicle);
+        try {
+            parkingLotSystem.findVehicle(new Object());
+        } catch (ParkingLotException e) {
+            assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
+        }
     }
 }

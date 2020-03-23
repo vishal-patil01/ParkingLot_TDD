@@ -34,7 +34,7 @@ public class ParkingLotSystem {
                 observer.setCapacityFull();
             throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
         }
-        parkVehicle(slot++, vehicle);
+        park(slot++, vehicle);
     }
 
     public boolean unPark(Object vehicle) {
@@ -45,7 +45,7 @@ public class ParkingLotSystem {
         return false;
     }
 
-    public void parkVehicle(int slot, Object vehicle) throws ParkingLotException {
+    public void park(int slot, Object vehicle) throws ParkingLotException {
         if (isVehicleParked(vehicle)) {
             throw new ParkingLotException("VEHICLE ALREADY PARK", ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
         }
@@ -59,6 +59,12 @@ public class ParkingLotSystem {
                 emptySlots.add(slot);
         }
         return emptySlots;
+    }
+
+    public int findVehicle(Object vehicle) throws ParkingLotException {
+        if (this.vehicles.contains(vehicle))
+            return this.vehicles.indexOf(vehicle);
+        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
     public boolean isVehicleParked(Object vehicle) {
