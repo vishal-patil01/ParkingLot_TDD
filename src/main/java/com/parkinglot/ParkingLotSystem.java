@@ -1,10 +1,12 @@
 package com.parkinglot;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
+    ParkingLotOwner owner = new ParkingLotOwner();
     private int actualCapacity;
     private List<ParkingLotObservers> observersList;
     public List vehicles;
@@ -26,7 +28,7 @@ public class ParkingLotSystem {
         initializeParkingLot();
     }
 
-    public void park(Object vehicle) throws ParkingLotException {
+    public int park(Object vehicle, int... slots) throws ParkingLotException {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("vehicle already parked", ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
         if (vehicles.size() == actualCapacity && !vehicles.contains(null)) {
@@ -34,7 +36,10 @@ public class ParkingLotSystem {
                 observer.setCapacityFull();
             throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
         }
-        park(slot++, vehicle);
+        int parkingNumber = (slots.length == 0) ? slot++ : slots[0];
+        this.vehicles.set(parkingNumber, vehicle);
+        observersList.get(0).setParkingTime(LocalDateTime.now().getMinute());
+        return LocalDateTime.now().getMinute();
     }
 
     public boolean unPark(Object vehicle) {
@@ -45,19 +50,9 @@ public class ParkingLotSystem {
         return false;
     }
 
-    public void park(int slot, Object vehicle) throws ParkingLotException {
-        if (isVehicleParked(vehicle)) {
-            throw new ParkingLotException("VEHICLE ALREADY PARK", ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
-        }
-        this.vehicles.set(slot, vehicle);
-    }
-
-    public ArrayList getSlot() {
+    public ArrayList getEmptyParkingSlot() {
         ArrayList<Integer> emptySlots = new ArrayList();
-        for (int slot = 0; slot < this.actualCapacity; slot++) {
-            if (this.vehicles.get(slot) == null)
-                emptySlots.add(slot);
-        }
+        IntStream.range(0, this.actualCapacity).filter(slot -> vehicles.get(slot) == null).forEach(slot -> emptySlots.add(slot));
         return emptySlots;
     }
 

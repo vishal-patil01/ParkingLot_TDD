@@ -10,12 +10,15 @@ import static org.junit.Assert.*;
 
 public class TestParkingLot {
     ParkingLotSystem parkingLotSystem;
+    ParkingLotOwner owner;
     Object vehicle;
 
     @Before
     public void setup() {
         vehicle = new Object();
         parkingLotSystem = new ParkingLotSystem(2);
+        owner = new ParkingLotOwner();
+        parkingLotSystem.registerObserver(owner);
     }
 
     @Test
@@ -117,7 +120,7 @@ public class TestParkingLot {
         expectedList.add(1);
         parkingLotSystem.setActualCapacity(2);
         parkingLotSystem.initializeParkingLot();
-        ArrayList emptySlotList = parkingLotSystem.getSlot();
+        ArrayList emptySlotList = parkingLotSystem.getEmptyParkingSlot();
         assertEquals(expectedList, emptySlotList);
     }
 
@@ -127,10 +130,10 @@ public class TestParkingLot {
         expectedList.add(0);
         expectedList.add(2);
         parkingLotSystem.setActualCapacity(3);
-        parkingLotSystem.park(0, vehicle);
-        parkingLotSystem.park(1, new Object());
+        parkingLotSystem.park(vehicle, 0);
+        parkingLotSystem.park(new Object(), 1);
         parkingLotSystem.unPark(vehicle);
-        ArrayList emptySlotList = parkingLotSystem.getSlot();
+        ArrayList emptySlotList = parkingLotSystem.getEmptyParkingSlot();
         assertEquals(expectedList, emptySlotList);
     }
 
@@ -138,8 +141,8 @@ public class TestParkingLot {
     public void givenVehicleForParkingOnEmptySlot_WhenParkWithProvidedEmptySlot_ShouldReturnTrue() {
         parkingLotSystem.setActualCapacity(10);
         parkingLotSystem.initializeParkingLot();
-        ArrayList<Integer> emptySlotList = parkingLotSystem.getSlot();
-        parkingLotSystem.park(emptySlotList.get(0), vehicle);
+        ArrayList<Integer> emptySlotList = parkingLotSystem.getEmptyParkingSlot();
+        parkingLotSystem.park(vehicle, emptySlotList.get(0));
         boolean vehiclePark = parkingLotSystem.isVehicleParked(vehicle);
         assertTrue(vehiclePark);
     }
@@ -161,5 +164,13 @@ public class TestParkingLot {
         } catch (ParkingLotException e) {
             assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
         }
+    }
+
+    //UC8
+    @Test
+    public void givenVehicleForParking_WhenVehicleParkedTimeIsSet_ShouldReturnParkingTime() {
+
+        int parkingTime = parkingLotSystem.park(vehicle);
+        assertEquals(owner.getParkingTime(), parkingTime);
     }
 }
