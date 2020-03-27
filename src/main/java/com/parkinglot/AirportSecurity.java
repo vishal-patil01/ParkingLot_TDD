@@ -12,13 +12,4 @@ public class AirportSecurity implements ParkingLotObservers {
     public boolean isCapacityFull() {
         return this.isFullCapacity;
     }
-
-    @Override
-    public void setParkingTime(int time) {}
-
-    @Override
-    public int getParkingTime() {
-        return 0;
-    }
-
 }

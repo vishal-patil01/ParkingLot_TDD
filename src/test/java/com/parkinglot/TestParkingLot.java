@@ -49,6 +49,15 @@ public class TestParkingLot {
     }
 
     @Test
+    public void givenVehicle_WhenIsNotAlreadyParked_ShouldThrowVehicleNotFoundException() {
+        try {
+            boolean isUnParked = parkingLotSystem.unPark(vehicle);
+        } catch (ParkingLotException e) {
+            assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
+        }
+    }
+
+    @Test
     public void givenWhenParkingLotIsFull_ShouldInformTheOwner() {
         parkingLotSystem.registerObserver(owner);
         try {
@@ -64,7 +73,6 @@ public class TestParkingLot {
     @Test
     public void givenCapacityIs2_ShouldAbleToPark2Vehicle() {
         Object vehicle2 = new Object();
-        parkingLotSystem.setActualCapacity(2);
         parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL);
         parkingLotSystem.park(vehicle2, ParkingLotSystem.DriverType.NORMAL);
         boolean isParked1 = parkingLotSystem.isVehicleParked(vehicle);
@@ -106,7 +114,7 @@ public class TestParkingLot {
     //UC6
     @Test
     public void givenParkingLotCapacity_WhenInitialize_ShouldReturnParkingCapacity() {
-        parkingLotSystem.setActualCapacity(10);
+        parkingLotSystem.setParkingLotCapacity(10);
         int parkingLotCapacity = parkingLotSystem.initializeParkingLot();
         assertEquals(10, parkingLotCapacity);
     }
@@ -116,9 +124,9 @@ public class TestParkingLot {
         List expectedList = new ArrayList();
         expectedList.add(0);
         expectedList.add(1);
-        parkingLotSystem.setActualCapacity(2);
+        parkingLotSystem.setParkingLotCapacity(2);
         parkingLotSystem.initializeParkingLot();
-        ArrayList emptySlotList = parkingLotSystem.getEmptyParkingSlot();
+        List emptySlotList = parkingLotSystem.getListOfEmptyParkingSlots();
         assertEquals(expectedList, emptySlotList);
     }
 
@@ -127,20 +135,19 @@ public class TestParkingLot {
         List expectedList = new ArrayList();
         expectedList.add(0);
         expectedList.add(2);
-        parkingLotSystem.setActualCapacity(3);
-        parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL, 0);
-        parkingLotSystem.park(new Object(), ParkingLotSystem.DriverType.NORMAL, 1);
+        parkingLotSystem.setParkingLotCapacity(3);
+        parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL);
+        parkingLotSystem.park(new Object(), ParkingLotSystem.DriverType.NORMAL);
         parkingLotSystem.unPark(vehicle);
-        ArrayList emptySlotList = parkingLotSystem.getEmptyParkingSlot();
+        List emptySlotList = parkingLotSystem.getListOfEmptyParkingSlots();
         assertEquals(expectedList, emptySlotList);
     }
 
     @Test
     public void givenVehicleForParkingOnEmptySlot_WhenParkWithProvidedEmptySlot_ShouldReturnTrue() {
-        parkingLotSystem.setActualCapacity(10);
+        parkingLotSystem.setParkingLotCapacity(10);
         parkingLotSystem.initializeParkingLot();
-        ArrayList<Integer> emptySlotList = parkingLotSystem.getEmptyParkingSlot();
-        parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL, emptySlotList.get(0));
+        parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL);
         boolean vehiclePark = parkingLotSystem.isVehicleParked(vehicle);
         assertTrue(vehiclePark);
     }
@@ -167,29 +174,30 @@ public class TestParkingLot {
     //UC8
     @Test
     public void givenVehicleForParking_WhenVehicleParkedTimeIsSet_ShouldReturnParkingTime() {
-
-        int parkingTime = parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL);
-        assertEquals(owner.getParkingTime(), parkingTime);
+        int parkingTime = (int)((System.currentTimeMillis() / (1000*60)) % 60);
+        parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL);
+        int vehicleParkingTime = parkingLotSystem.getVehicleParkingTime(vehicle);
+        assertEquals(parkingTime, vehicleParkingTime);
     }
 
     //UC9
     @Test
     public void givenMultipleCarsLessThanActualCapacity_WhenParkEvenly_shouldReturnFirstIndexEmpty() {
-        parkingLotSystem.setActualCapacity(5);
+        parkingLotSystem.setParkingLotCapacity(5);
         parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL);
         parkingLotSystem.park(new Object(), ParkingLotSystem.DriverType.NORMAL);
         parkingLotSystem.park(new Object(), ParkingLotSystem.DriverType.NORMAL);
         parkingLotSystem.park(new Object(), ParkingLotSystem.DriverType.NORMAL);
         parkingLotSystem.unPark(vehicle);
         parkingLotSystem.park(new Object(), ParkingLotSystem.DriverType.NORMAL);
-        Object lastEmptySlot = parkingLotSystem.getEmptyParkingSlot().get(0);
+        Object lastEmptySlot = parkingLotSystem.getListOfEmptyParkingSlots().get(0);
         assertEquals(0, lastEmptySlot);
     }
 
     //UC10
     @Test
     public void givenCarToPark_whenDriverIsHandicap_shouldParkedAtNearestSpot() {
-        parkingLotSystem.setActualCapacity(5);
+        parkingLotSystem.setParkingLotCapacity(5);
         Object vehicle2 = new Object();
         parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL);
         parkingLotSystem.park(new Object(), ParkingLotSystem.DriverType.NORMAL);
