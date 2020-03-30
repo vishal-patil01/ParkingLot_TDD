@@ -1,7 +1,7 @@
 package com.parkinglot.unittest;
 
-import com.parkinglot.AirportSecurity;
-import com.parkinglot.ParkingLotSystem;
+import com.parkinglot.Observers.AirportSecurity;
+import com.parkinglot.Observers.ParkingAvailabilityInformer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,14 +10,15 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 public class TestAirportSecurityClass {
     @Mock
-    ParkingLotSystem parkingLotSystem;
-    AirportSecurity airportSecurity;
+    ParkingAvailabilityInformer informer;
+    AirportSecurity security;
     Object vehicle;
 
     @Rule
@@ -25,18 +26,29 @@ public class TestAirportSecurityClass {
 
     @Before
     public void setup() {
-        parkingLotSystem = mock(ParkingLotSystem.class);
-        airportSecurity = new AirportSecurity();
+        informer = mock(ParkingAvailabilityInformer.class);
+        security = new AirportSecurity();
         vehicle = new Object();
+    }
+    @Test
+    public void testSetParkingLotFull_And_isCapacityFullFunction() {
+        informer.register(security);
+        doAnswer((Answer<Void>) invocationOnMock -> {
+            security.setParkingLotFull();
+            return null;
+        }).when(informer).notifyParkingFull();
+        informer.notifyParkingFull();
+        assertTrue(security.isParkingLotFull());
     }
 
     @Test
-    public void testSetCapacityFull_And_isCapacityFullFunction() {
+    public void testSetParkingAvailable_And_isCapacityFullFunction() {
+        informer.register(security);
         doAnswer((Answer<Void>) invocationOnMock -> {
-            airportSecurity.setCapacityFull();
+            security.setParkingAvailable();
             return null;
-        }).when(parkingLotSystem).park(vehicle, ParkingLotSystem.DriverType.NORMAL);
-        parkingLotSystem.park(vehicle, ParkingLotSystem.DriverType.NORMAL);
-        assertTrue(airportSecurity.isCapacityFull());
+        }).when(informer).notifyParkingAvailable();
+        informer.notifyParkingAvailable();
+        assertFalse(security.isParkingLotFull());
     }
 }

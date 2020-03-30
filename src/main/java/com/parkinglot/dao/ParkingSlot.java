@@ -1,8 +1,8 @@
-package com.parkinglot;
+package com.parkinglot.dao;
 
 public class ParkingSlot {
-    Object vehicle;
-    int parkedTime;
+    public Object vehicle;
+    public int parkedTime;
 
     public ParkingSlot(Object vehicle) {
         this.vehicle = vehicle;

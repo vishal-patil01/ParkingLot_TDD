@@ -1,7 +1,10 @@
 package com.parkinglot.unittest;
 
+import com.parkinglot.Observers.AirportSecurity;
+import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.Observers.ParkingAvailabilityInformer;
 import com.parkinglot.Observers.ParkingLotOwner;
+import com.parkinglot.ParkingLots;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,10 +18,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-public class TestParkingLotOwnerClass {
+public class TestParkingLotsAvailabilityInformer {
     @Mock
+    ParkingLots parkingLots;
     ParkingAvailabilityInformer informer;
     ParkingLotOwner owner;
+    AirportSecurity security;
     Object vehicle;
 
     @Rule
@@ -26,30 +31,34 @@ public class TestParkingLotOwnerClass {
 
     @Before
     public void setup() {
-        informer = mock(ParkingAvailabilityInformer.class);
+        parkingLots = mock(ParkingLots.class);
+        security = new AirportSecurity();
         owner = new ParkingLotOwner();
+        informer = new ParkingAvailabilityInformer();
         vehicle = new Object();
     }
 
     @Test
-    public void testSetParkingLotFull_And_isCapacityFullFunction() {
+    public void testNotifyParkingAvailable() {
         informer.register(owner);
+        informer.register(security);
         doAnswer((Answer<Void>) invocationOnMock -> {
-            owner.setParkingLotFull();
+            informer.notifyParkingAvailable();
             return null;
-        }).when(informer).notifyParkingFull();
-        informer.notifyParkingFull();
-        assertTrue(owner.isParkingLotFull());
+        }).when(parkingLots).park(vehicle, DriverTypes.NORMAL);
+        parkingLots.park(vehicle, DriverTypes.NORMAL);
+        assertFalse(owner.isParkingLotFull() && security.isParkingLotFull());
     }
 
     @Test
-    public void testSetParkingAvailable_And_isCapacityFullFunction() {
+    public void testNotifyParkingFull() {
         informer.register(owner);
+        informer.register(security);
         doAnswer((Answer<Void>) invocationOnMock -> {
-            owner.setParkingAvailable();
+            informer.notifyParkingFull();
             return null;
-        }).when(informer).notifyParkingAvailable();
-        informer.notifyParkingAvailable();
-        assertFalse(owner.isParkingLotFull());
+        }).when(parkingLots).park(vehicle, DriverTypes.NORMAL);
+        parkingLots.park(vehicle, DriverTypes.NORMAL);
+        assertTrue(owner.isParkingLotFull() && security.isParkingLotFull());
     }
 }
