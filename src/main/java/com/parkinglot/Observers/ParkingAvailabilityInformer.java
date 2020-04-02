@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParkingAvailabilityInformer {
-    static List<ParkingLotObservers> observersList;
+    List<ParkingLotObservers> observersList;
+    static ParkingAvailabilityInformer instance;
 
-    public ParkingAvailabilityInformer() {
+    public static ParkingAvailabilityInformer getInstance() {
+        if (instance == null)
+            instance = new ParkingAvailabilityInformer();
+        return instance;
+    }
+
+    private ParkingAvailabilityInformer() {
         observersList = new ArrayList<>();
     }
 

@@ -1,8 +1,9 @@
 package com.parkinglot;
 
-import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.Observers.ParkingAvailabilityInformer;
 import com.parkinglot.dao.ParkingSlot;
+import com.parkinglot.enums.DriverTypes;
+import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exceptions.ParkingLotException;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class ParkingLots {
     public List<ParkingSlot> vehiclesList;
 
     public ParkingLots(int parkingSlotCapacity) {
-        informer = new ParkingAvailabilityInformer();
+        informer = ParkingAvailabilityInformer.getInstance();
         setParkingLotCapacity(parkingSlotCapacity);
     }
 
@@ -33,15 +34,15 @@ public class ParkingLots {
         return vehiclesList.size();
     }
 
-    public boolean park(Object vehicle, DriverTypes driverType) throws ParkingLotException {
+    public boolean park(Object vehicle, DriverTypes driverType, VehicleType vehicleType) throws ParkingLotException {
         parkingSlot = new ParkingSlot(vehicle);
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("vehicle already parked", ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
         if (vehiclesList.size() == parkingSlotCapacity && !vehiclesList.contains(null)) {
             informer.notifyParkingFull();
-            throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
+            throw new ParkingLotException("packing lot is full", ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
         }
-        int emptyParkingSlot = getEmptyParkingSlotBasedOnDriverType(driverType);
+        int emptyParkingSlot = getEmptyParkingSlotBasedOnDriverType(driverType, vehicleType);
         this.vehiclesList.set(emptyParkingSlot, parkingSlot);
         return true;
     }
@@ -51,8 +52,12 @@ public class ParkingLots {
         return this.vehiclesList.contains(parkingSlot);
     }
 
-    public Integer getEmptyParkingSlotBasedOnDriverType(DriverTypes driverType) {
-        return getListOfEmptyParkingSlots().stream().sorted(driverType.order).collect(Collectors.toList()).get(0);
+    public Integer getEmptyParkingSlotBasedOnDriverType(DriverTypes driverType, VehicleType vehicleType) {
+        return getEmptyParkingSlotBasedOnVehicleType(vehicleType).stream().sorted(driverType.order).collect(Collectors.toList()).get(0);
+    }
+
+    public ArrayList<Integer> getEmptyParkingSlotBasedOnVehicleType(VehicleType vehicleType) {
+        return vehicleType.getParkingLotsList(getListOfEmptyParkingSlots());
     }
 
     public ArrayList<Integer> getListOfEmptyParkingSlots() {
@@ -71,10 +76,10 @@ public class ParkingLots {
     }
 
     public int findVehicle(Object vehicle) throws ParkingLotException {
+        ParkingSlot parkingSlot = new ParkingSlot(vehicle);
         if (isVehicleParked(vehicle))
             return this.vehiclesList.indexOf(parkingSlot);
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
-
     }
 
     public int getVehicleParkingTime(Object vehicle) {

@@ -1,7 +1,6 @@
 package com.parkinglot.enums;
 
 import java.util.Comparator;
-
 import static java.util.Comparator.*;
 
 public enum  DriverTypes{

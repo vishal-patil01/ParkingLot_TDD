@@ -3,6 +3,7 @@ package com.parkinglot.unittest;
 import com.parkinglot.Observers.ParkingLotOwner;
 import com.parkinglot.ParkingLots;
 import com.parkinglot.enums.DriverTypes;
+import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exceptions.ParkingLotException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,13 +35,13 @@ public class TestParkingLotExceptionClass {
     @Test(expected = ParkingLotException.class)
     public void testParkingLotExceptionClass_ThrowParkingLotException_WhenCallingParkFunction() {
         doThrow(ParkingLotException.class)
-                .when(parkingLots).park(any(), any(DriverTypes.class));
-        parkingLots.park(1, DriverTypes.NORMAL);
+                .when(parkingLots).park(any(), any(DriverTypes.class),any(VehicleType.class));
+        parkingLots.park(1, DriverTypes.NORMAL,VehicleType.SMALL);
     }
 
     @Test
     public void testVehicleAlReadyParkedException_WhenVehicleObjectPassedToParkFunction_ThrowAnException() {
-        when(parkingLots.park(any(), any())).thenAnswer(
+        when(parkingLots.park(any(), any(),any())).thenAnswer(
                 (Answer) invocation -> {
                     if (invocation.getArgument(0).equals(vehicle)) {
                         throw new ParkingLotException("", ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
@@ -48,7 +49,7 @@ public class TestParkingLotExceptionClass {
                     throw new ParkingLotException("", ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
                 });
         try {
-            parkingLots.park(vehicle, DriverTypes.NORMAL);
+            parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
         } catch (ParkingLotException e) {
             assertEquals(e.exceptionTypes, ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
         }
@@ -56,7 +57,7 @@ public class TestParkingLotExceptionClass {
 
     @Test
     public void testParkingLotFullException_WhenAnotherObjectPassedToParkFunction_ThrowAnException() {
-        when(parkingLots.park(any(), any())).thenAnswer(
+        when(parkingLots.park(any(), any(),any())).thenAnswer(
                 (Answer) invocation -> {
                     if (invocation.getArgument(0) == vehicle) {
                         throw new ParkingLotException("", ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
@@ -64,7 +65,7 @@ public class TestParkingLotExceptionClass {
                     throw new ParkingLotException("", ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
                 });
         try {
-            parkingLots.park(new Object(), DriverTypes.NORMAL);
+            parkingLots.park(new Object(), DriverTypes.NORMAL,VehicleType.SMALL);
         } catch (ParkingLotException e) {
             assertEquals(e.exceptionTypes, ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
         }

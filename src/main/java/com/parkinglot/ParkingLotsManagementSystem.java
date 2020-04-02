@@ -3,19 +3,19 @@ package com.parkinglot;
 import com.parkinglot.Observers.ParkingAvailabilityInformer;
 import com.parkinglot.Observers.ParkingLotObservers;
 import com.parkinglot.enums.DriverTypes;
+import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exceptions.ParkingLotException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ParkingLotsManagementSystem {
     List<ParkingLots> parkingLotsList;
     ParkingAvailabilityInformer informer;
 
     public ParkingLotsManagementSystem() {
-        informer = new ParkingAvailabilityInformer();
+        informer = ParkingAvailabilityInformer.getInstance();
         this.parkingLotsList = new ArrayList<>();
     }
 
@@ -27,9 +27,9 @@ public class ParkingLotsManagementSystem {
         return this.parkingLotsList.contains(parkingLot);
     }
 
-    public boolean park(Object vehicle, DriverTypes driverType) {
+    public boolean park(Object vehicle, DriverTypes driverType, VehicleType vehicleType) {
         ParkingLots lot = getParkingLotHavingMaxSpace();
-        return lot.park(vehicle, driverType);
+        return lot.park(vehicle, driverType, vehicleType);
     }
 
     public boolean isVehicleParked(Object vehicle) {
@@ -42,7 +42,8 @@ public class ParkingLotsManagementSystem {
 
     public int findVehicle(Object vehicle) {
         for (ParkingLots parkingLots : this.parkingLotsList)
-            return parkingLots.findVehicle(vehicle);
+            if (parkingLots.isVehicleParked(vehicle))
+                return parkingLots.findVehicle(vehicle);
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
@@ -60,7 +61,17 @@ public class ParkingLotsManagementSystem {
     }
 
     public ParkingLots getParkingLotHavingMaxSpace() {
-        return parkingLotsList.stream().sorted(Comparator.comparing(list -> list.getListOfEmptyParkingSlots().size(), Comparator.reverseOrder())).collect(Collectors.toList()).get(0);
+        ParkingLots parkingLots;
+        try {
+            parkingLots = parkingLotsList.stream()
+                    .sorted(Comparator.comparing(list -> list.getListOfEmptyParkingSlots().size(), Comparator.reverseOrder()))
+                    .filter(list -> list.getListOfEmptyParkingSlots().size() != 0)
+                    .findFirst()
+                    .orElseThrow(() -> new ParkingLotException("ParkingLot Full", ParkingLotException.ExceptionTypes.PARKING_LOT_FULL));
+        } catch (ParkingLotException e) {
+            parkingLots = parkingLotsList.get(0);
+        }
+        return parkingLots;
     }
 
     public void register(ParkingLotObservers observer) {

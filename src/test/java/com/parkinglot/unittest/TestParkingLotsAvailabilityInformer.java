@@ -5,6 +5,7 @@ import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.Observers.ParkingAvailabilityInformer;
 import com.parkinglot.Observers.ParkingLotOwner;
 import com.parkinglot.ParkingLots;
+import com.parkinglot.enums.VehicleType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class TestParkingLotsAvailabilityInformer {
         parkingLots = mock(ParkingLots.class);
         security = new AirportSecurity();
         owner = new ParkingLotOwner();
-        informer = new ParkingAvailabilityInformer();
+        informer = ParkingAvailabilityInformer.getInstance();
         vehicle = new Object();
     }
 
@@ -45,8 +46,8 @@ public class TestParkingLotsAvailabilityInformer {
         doAnswer((Answer<Void>) invocationOnMock -> {
             informer.notifyParkingAvailable();
             return null;
-        }).when(parkingLots).park(vehicle, DriverTypes.NORMAL);
-        parkingLots.park(vehicle, DriverTypes.NORMAL);
+        }).when(parkingLots).park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+        parkingLots.park(vehicle, DriverTypes.NORMAL,VehicleType.SMALL);
         assertFalse(owner.isParkingLotFull() && security.isParkingLotFull());
     }
 
@@ -57,8 +58,8 @@ public class TestParkingLotsAvailabilityInformer {
         doAnswer((Answer<Void>) invocationOnMock -> {
             informer.notifyParkingFull();
             return null;
-        }).when(parkingLots).park(vehicle, DriverTypes.NORMAL);
-        parkingLots.park(vehicle, DriverTypes.NORMAL);
+        }).when(parkingLots).park(vehicle, DriverTypes.NORMAL,VehicleType.SMALL);
+        parkingLots.park(vehicle, DriverTypes.NORMAL,VehicleType.SMALL);
         assertTrue(owner.isParkingLotFull() && security.isParkingLotFull());
     }
 }

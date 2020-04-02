@@ -3,6 +3,7 @@ package com.parkinglot.unittest;
 import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.ParkingLots;
 import com.parkinglot.ParkingLotsManagementSystem;
+import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exceptions.ParkingLotException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,8 +15,7 @@ import org.mockito.stubbing.Answer;
 
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 public class TestParkingLots {
     @Mock
@@ -36,22 +36,19 @@ public class TestParkingLots {
 
     @Test
     public void testParkFunction() {
-        doAnswer((Answer<Void>) invocationOnMock -> {
-            parkingLots.park(vehicle, DriverTypes.NORMAL);
-            return null;
-        }).when(parkingLotsManagementSystem).park(vehicle, DriverTypes.NORMAL);
-        boolean isParked = parkingLots.park(vehicle, DriverTypes.NORMAL);
+        doAnswer((Answer<Boolean>) invocationOnMock -> {
+            parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+            return true;
+        }).when(parkingLotsManagementSystem).park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+        boolean isParked = parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
         assertTrue(isParked);
     }
 
     @Test
     public void testUnParkFunction() {
-        doAnswer((Answer<Void>) invocationOnMock -> {
-            parkingLots.unPark(vehicle);
-            return null;
-        }).when(parkingLotsManagementSystem).unPark(vehicle);
-        parkingLots.park(vehicle, DriverTypes.NORMAL);
-        boolean isParked = parkingLots.unPark(vehicle);
+        when(parkingLotsManagementSystem.unPark(vehicle)).thenReturn(true);
+        parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+        boolean isParked = parkingLotsManagementSystem.unPark(vehicle);
         assertTrue(isParked);
     }
 
@@ -62,7 +59,7 @@ public class TestParkingLots {
             return null;
         }).when(parkingLotsManagementSystem).findVehicle(vehicle);
         try {
-            parkingLots.findVehicle(vehicle);
+            parkingLotsManagementSystem.findVehicle(vehicle);
         } catch (ParkingLotException e) {
             assertSame(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
         }
