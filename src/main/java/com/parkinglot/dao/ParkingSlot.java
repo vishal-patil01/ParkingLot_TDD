@@ -1,10 +1,10 @@
 package com.parkinglot.dao;
 
 public class ParkingSlot {
-    public Object vehicle;
+    public Vehicle vehicle;
     public int parkedTime;
 
-    public ParkingSlot(Object vehicle) {
+    public ParkingSlot(Vehicle vehicle) {
         this.vehicle = vehicle;
         this.parkedTime = (int) ((System.currentTimeMillis() / (1000 * 60)) % 60);
     }

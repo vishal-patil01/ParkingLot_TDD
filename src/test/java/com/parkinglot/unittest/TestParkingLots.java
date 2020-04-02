@@ -1,5 +1,6 @@
 package com.parkinglot.unittest;
 
+import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.ParkingLots;
 import com.parkinglot.ParkingLotsManagementSystem;
@@ -22,7 +23,7 @@ public class TestParkingLots {
     ParkingLotsManagementSystem parkingLotsManagementSystem;
     ParkingLots parkingLots;
     DriverTypes driverTypes;
-    Object vehicle;
+    Vehicle vehicle;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -30,7 +31,7 @@ public class TestParkingLots {
     @Before
     public void setup() {
         parkingLotsManagementSystem = mock(ParkingLotsManagementSystem.class);
-        vehicle = new Object();
+        vehicle = new Vehicle();
         parkingLots = new ParkingLots(2);
     }
 

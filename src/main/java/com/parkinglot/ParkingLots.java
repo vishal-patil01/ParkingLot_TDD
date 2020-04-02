@@ -2,12 +2,14 @@ package com.parkinglot;
 
 import com.parkinglot.Observers.ParkingAvailabilityInformer;
 import com.parkinglot.dao.ParkingSlot;
+import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exceptions.ParkingLotException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -34,7 +36,7 @@ public class ParkingLots {
         return vehiclesList.size();
     }
 
-    public boolean park(Object vehicle, DriverTypes driverType, VehicleType vehicleType) throws ParkingLotException {
+    public boolean park(Vehicle vehicle, DriverTypes driverType, VehicleType vehicleType) throws ParkingLotException {
         parkingSlot = new ParkingSlot(vehicle);
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("vehicle already parked", ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED);
@@ -47,7 +49,7 @@ public class ParkingLots {
         return true;
     }
 
-    public boolean isVehicleParked(Object vehicle) {
+    public boolean isVehicleParked(Vehicle vehicle) {
         parkingSlot = new ParkingSlot(vehicle);
         return this.vehiclesList.contains(parkingSlot);
     }
@@ -66,7 +68,7 @@ public class ParkingLots {
         return emptyParkingSlotList;
     }
 
-    public boolean unPark(Object vehicle) {
+    public boolean unPark(Vehicle vehicle) {
         if (isVehicleParked(vehicle)) {
             this.vehiclesList.set(this.vehiclesList.indexOf(parkingSlot), null);
             informer.notifyParkingAvailable();
@@ -75,16 +77,25 @@ public class ParkingLots {
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
-    public int findVehicle(Object vehicle) throws ParkingLotException {
+    public int findVehicle(Vehicle vehicle) throws ParkingLotException {
         ParkingSlot parkingSlot = new ParkingSlot(vehicle);
         if (isVehicleParked(vehicle))
             return this.vehiclesList.indexOf(parkingSlot);
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
-    public int getVehicleParkingTime(Object vehicle) {
+    public int getVehicleParkingTime(Vehicle vehicle) {
         if (isVehicleParked(vehicle))
             return parkingSlot.parkedTime;
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+    }
+
+    public ArrayList<Integer> findOnField(String fieldName) {
+        ArrayList<Integer> checklist = new ArrayList<>();
+        IntStream.range(0, vehiclesList.size())
+                .filter(slot -> vehiclesList.get(slot) != null)
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getColor(), fieldName))
+                .forEach(checklist::add);
+        return checklist;
     }
 }

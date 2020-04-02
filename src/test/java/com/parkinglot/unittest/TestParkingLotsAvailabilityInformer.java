@@ -1,6 +1,7 @@
 package com.parkinglot.unittest;
 
 import com.parkinglot.Observers.AirportSecurity;
+import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.Observers.ParkingAvailabilityInformer;
 import com.parkinglot.Observers.ParkingLotOwner;
@@ -25,7 +26,7 @@ public class TestParkingLotsAvailabilityInformer {
     ParkingAvailabilityInformer informer;
     ParkingLotOwner owner;
     AirportSecurity security;
-    Object vehicle;
+    Vehicle vehicle;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -36,7 +37,7 @@ public class TestParkingLotsAvailabilityInformer {
         security = new AirportSecurity();
         owner = new ParkingLotOwner();
         informer = ParkingAvailabilityInformer.getInstance();
-        vehicle = new Object();
+        vehicle = new Vehicle();
     }
 
     @Test

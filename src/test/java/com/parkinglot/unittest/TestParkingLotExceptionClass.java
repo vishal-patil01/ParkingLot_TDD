@@ -2,6 +2,7 @@ package com.parkinglot.unittest;
 
 import com.parkinglot.Observers.ParkingLotOwner;
 import com.parkinglot.ParkingLots;
+import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exceptions.ParkingLotException;
@@ -20,7 +21,7 @@ public class TestParkingLotExceptionClass {
     @Mock
     ParkingLots parkingLots;
     ParkingLotOwner owner;
-    Object vehicle;
+    Vehicle vehicle;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -29,18 +30,18 @@ public class TestParkingLotExceptionClass {
     public void setup() {
         parkingLots = mock(ParkingLots.class);
         owner = new ParkingLotOwner();
-        vehicle = new Object();
+        vehicle = new Vehicle();
     }
 
     @Test(expected = ParkingLotException.class)
     public void testParkingLotExceptionClass_ThrowParkingLotException_WhenCallingParkFunction() {
         doThrow(ParkingLotException.class)
                 .when(parkingLots).park(any(), any(DriverTypes.class),any(VehicleType.class));
-        parkingLots.park(1, DriverTypes.NORMAL,VehicleType.SMALL);
+        parkingLots.park(new Vehicle(), DriverTypes.NORMAL,VehicleType.SMALL);
     }
 
     @Test
-    public void testVehicleAlReadyParkedException_WhenVehicleObjectPassedToParkFunction_ThrowAnException() {
+    public void testVehicleAlReadyParkedException_WhenVehicleVehiclePassedToParkFunction_ThrowAnException() {
         when(parkingLots.park(any(), any(),any())).thenAnswer(
                 (Answer) invocation -> {
                     if (invocation.getArgument(0).equals(vehicle)) {
@@ -56,7 +57,7 @@ public class TestParkingLotExceptionClass {
     }
 
     @Test
-    public void testParkingLotFullException_WhenAnotherObjectPassedToParkFunction_ThrowAnException() {
+    public void testParkingLotFullException_WhenAnotherVehiclePassedToParkFunction_ThrowAnException() {
         when(parkingLots.park(any(), any(),any())).thenAnswer(
                 (Answer) invocation -> {
                     if (invocation.getArgument(0) == vehicle) {
@@ -65,14 +66,14 @@ public class TestParkingLotExceptionClass {
                     throw new ParkingLotException("", ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
                 });
         try {
-            parkingLots.park(new Object(), DriverTypes.NORMAL,VehicleType.SMALL);
+            parkingLots.park(new Vehicle(), DriverTypes.NORMAL,VehicleType.SMALL);
         } catch (ParkingLotException e) {
             assertEquals(e.exceptionTypes, ParkingLotException.ExceptionTypes.PARKING_LOT_FULL);
         }
     }
 
     @Test
-    public void testVehicleNotFoundException_WhenNewObjectPassedToUnParkFunctionNotMatchesVehicleObject_ThrowVehicleNotFoundException() {
+    public void testVehicleNotFoundException_WhenNewVehiclePassedToUnParkFunctionNotMatchesVehicle_ThrowVehicleNotFoundException() {
         when(parkingLots.unPark(any())).thenAnswer(
                 (Answer) invocation -> {
                     if (invocation.getArgument(0) == vehicle) {
@@ -81,7 +82,7 @@ public class TestParkingLotExceptionClass {
                     throw new ParkingLotException("", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
                 });
         try {
-            parkingLots.unPark(new Object());
+            parkingLots.unPark(new Vehicle());
         } catch (ParkingLotException e) {
             assertEquals(e.exceptionTypes, ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
         }
