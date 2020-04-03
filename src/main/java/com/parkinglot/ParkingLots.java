@@ -90,12 +90,23 @@ public class ParkingLots {
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
-    public ArrayList<Integer> findOnField(String fieldName) {
-        ArrayList<Integer> checklist = new ArrayList<>();
+    public ArrayList<Integer> findByFieldName(String fieldName) {
+        ArrayList<Integer> filteredVehicleDetailsList = new ArrayList<>();
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
                 .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getColor(), fieldName))
-                .forEach(checklist::add);
-        return checklist;
+                .forEach(filteredVehicleDetailsList::add);
+        return filteredVehicleDetailsList;
+    }
+
+    public ArrayList<String> findByFieldName(String color, String modelName) {
+        ArrayList<String> filteredVehicleDetailsList = new ArrayList<>();
+        IntStream.range(0, vehiclesList.size())
+                .filter(slot -> vehiclesList.get(slot) != null)
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getColor(), color))
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getModelName(), modelName))
+                .mapToObj(slot->(slot+ " "+vehiclesList.get(slot).vehicle.getNumberPlate()))
+                .forEach(filteredVehicleDetailsList::add);
+        return filteredVehicleDetailsList;
     }
 }

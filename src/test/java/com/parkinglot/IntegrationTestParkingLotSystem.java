@@ -289,7 +289,28 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-        ArrayList<Integer> vehicleByColor = parkingLotsManagementSystem.findVehicleByColor("White");
-        assertEquals(expectedVehicles, vehicleByColor);
+        ArrayList<Integer> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByColor("White");
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+
+    //uc13
+    @Test
+    public void givenVehicleModelNumberAndColor_WhenFindVehicleAccordinglyModelNumberAndColor_ShouldReturnFilteredVehicleInformation() {
+        parkingLot.setParkingLotCapacity(8);
+        ArrayList<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add(1+" " +"MH-12-V123");
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue","MH-12-V123", "toyota");
+        Vehicle vehicle4 = new Vehicle("white", "xy123", "BMW");
+
+        parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.LARGE);
+        parkingLotsManagementSystem.park(vehicle2, DriverTypes.NORMAL, VehicleType.LARGE);
+        parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
+        parkingLotsManagementSystem.park(vehicle4, DriverTypes.NORMAL, VehicleType.LARGE);
+        parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
+        parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByMultipleValue("blue","toyota");
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 }

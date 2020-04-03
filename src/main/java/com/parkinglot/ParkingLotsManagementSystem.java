@@ -2,7 +2,6 @@ package com.parkinglot;
 
 import com.parkinglot.Observers.ParkingAvailabilityInformer;
 import com.parkinglot.Observers.ParkingLotObservers;
-import com.parkinglot.dao.ParkingSlot;
 import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.enums.VehicleType;
@@ -11,8 +10,6 @@ import com.parkinglot.exceptions.ParkingLotException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class ParkingLotsManagementSystem {
     List<ParkingLots> parkingLotsList;
@@ -53,7 +50,13 @@ public class ParkingLotsManagementSystem {
 
     public ArrayList<Integer> findVehicleByColor(String color) {
         for (ParkingLots lot : parkingLotsList)
-         return lot.findOnField(color);
+            return lot.findByFieldName(color);
+        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+    }
+
+    public ArrayList<String> findVehicleByMultipleValue(String color,String model) {
+        for (ParkingLots lot : parkingLotsList)
+            return lot.findByFieldName(color,model);
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
