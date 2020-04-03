@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.parkinglot.Predicates.VehiclePredicates.*;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
 
@@ -279,17 +280,17 @@ public class IntegrationTestParkingLotSystem {
     //uc12
     @Test
     public void givenVehicleColour_WhenFindVehicleAccordinglyColour_ShouldReturnVehicleSlotNumber() {
-        Vehicle vehicle2 = new Vehicle("White");
-        Vehicle vehicle3 = new Vehicle("White");
+        Vehicle vehicle2 = new Vehicle("White", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("White", "MH-12-V123", "toyota");
         parkingLot.setParkingLotCapacity(6);
-        ArrayList<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("SlotNumber: " + 2);
-        expectedVehicles.add("SlotNumber: " + 4);
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("2 MH-12-V123 toyota White");
+        expectedVehicles.add("4 MH-12 BMW White");
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByColour("White");
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(colorFilter("White"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -297,8 +298,8 @@ public class IntegrationTestParkingLotSystem {
     @Test
     public void givenVehicleModelNumberAndColor_WhenFindVehicleAccordinglyModelNumberAndColor_ShouldReturnFilteredVehicleInformation() {
         parkingLot.setParkingLotCapacity(5);
-        ArrayList<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add(4 + " " + "MH-12-V123");
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("4 MH-12-V123 toyota blue");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
@@ -308,7 +309,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle4, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.LARGE);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByMultipleFieldNames("blue", "toyota");
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(modelNumberAndColorFilter("toyota", "blue"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -316,15 +317,15 @@ public class IntegrationTestParkingLotSystem {
     @Test
     public void givenVehicleModel_WhenFindVehicleAccordinglyModel_ShouldReturnVehicleSlotNumber() {
         parkingLot.setParkingLotCapacity(5);
-        ArrayList<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("SlotNumber: " + 1);
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("1 MH-12 BMW blue");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByModelNumber("BMW");
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(modelNumberFilter("BMW"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -332,17 +333,17 @@ public class IntegrationTestParkingLotSystem {
     @Test
     public void givenParkingLots_WhenFindVehiclesAccordinglyParkedInLast30Minutes_ShouldReturnVehicleSlotNumber() {
         parkingLot.setParkingLotCapacity(5);
-        ArrayList<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("SlotNumber: " + 1);
-        expectedVehicles.add("SlotNumber: " + 3);
-        expectedVehicles.add("SlotNumber: " + 4);
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("1 MH-12 BMW blue");
+        expectedVehicles.add("3 MH-12-V123 toyota blue");
+        expectedVehicles.add("4 MH-19 toyota white");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleParkedInLast30Minutes();
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(parkingTimeFilter(30));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -350,7 +351,7 @@ public class IntegrationTestParkingLotSystem {
     @Test
     public void givenParkingLots_WhenFindVehiclesAccordinglySmallVehicleAndHandicapDriverType_ShouldReturnVehicleDetails() {
         parkingLot.setParkingLotCapacity(5);
-        ArrayList<String> expectedVehicles = new ArrayList<>();
+        List<String> expectedVehicles = new ArrayList<>();
         expectedVehicles.add("0 MH-19 toyota white");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
@@ -358,7 +359,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.HANDICAP, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByVehicleTypeAndDriverType(VehicleType.SMALL, DriverTypes.HANDICAP);
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(filterByVehicleTypeAndDriverType(VehicleType.SMALL, DriverTypes.HANDICAP));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -366,7 +367,7 @@ public class IntegrationTestParkingLotSystem {
     @Test
     public void givenParkingLots_WhenFindParkedVehicles_ShouldReturnVehiclesDetails() {
         parkingLot.setParkingLotCapacity(5);
-        ArrayList<String> expectedVehicles = new ArrayList<>();
+        List<String> expectedVehicles = new ArrayList<>();
         expectedVehicles.add("0 MH-19 toyota white");
         expectedVehicles.add("2 MH-12 BMW blue");
         expectedVehicles.add("4 MH-12-V123 toyota blue");
@@ -376,7 +377,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.HANDICAP, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findAllParkedVehicles();
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(filterByParkedVehicles());
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 }

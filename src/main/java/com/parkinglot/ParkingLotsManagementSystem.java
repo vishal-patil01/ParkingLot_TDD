@@ -10,6 +10,7 @@ import com.parkinglot.exceptions.ParkingLotException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.IntPredicate;
 
 public class ParkingLotsManagementSystem {
     List<ParkingLots> parkingLotsList;
@@ -79,39 +80,9 @@ public class ParkingLotsManagementSystem {
         informer.register(observer);
     }
 
-    public ArrayList<String> findVehicleByColour(String colour) {
+    public List<String> filterByPredicate(IntPredicate intPredicate) {
         for (ParkingLots lot : parkingLotsList)
-            return lot.findVehicleByColor(colour);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<String> findVehicleByModelNumber(String modelNumber) {
-        for (ParkingLots lot : parkingLotsList)
-            return lot.findVehicleByModelNumber(modelNumber);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<String> findVehicleParkedInLast30Minutes() {
-        for (ParkingLots lot : parkingLotsList)
-            return lot.findVehicleParkedInLast30Minutes();
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<String> findVehicleByMultipleFieldNames(String color, String model) {
-        for (ParkingLots lot : parkingLotsList)
-            return lot.findByFieldNames(color, model);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<String> findVehicleByVehicleTypeAndDriverType(VehicleType vehicleType, DriverTypes driverType) {
-        for (ParkingLots lot : parkingLotsList)
-            return lot.findByFieldByVehicleTypeAndDriverType(vehicleType, driverType);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<String> findAllParkedVehicles() {
-        for (ParkingLots lot : parkingLotsList)
-            return lot.findAllParkedVehicles();
+            return lot.filterByPredicate(intPredicate);
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 }
