@@ -8,9 +8,8 @@ public enum VehicleType {
         @Override
         public ArrayList<Integer> getParkingLotsList(ArrayList<Integer> list) {
             ArrayList<Integer> modifiedEmptySlotsList = new ArrayList<>();
-            IntStream.range(0, list.size() - 3)
-                    .filter(i -> (list.get(i + 2) - list.get(i) + 1) == 3).forEach(i -> modifiedEmptySlotsList.add(i + 1));
-            System.out.println(modifiedEmptySlotsList);
+            IntStream.rangeClosed(0,list.size()-3).filter(i->(list.get(i + 2) - list.get(i) + 1) == 3)
+                    .forEach(i->modifiedEmptySlotsList.add(list.get(i+1)));
             return (modifiedEmptySlotsList.size() > 0) ? modifiedEmptySlotsList : SMALL.getParkingLotsList(list);
         }
     },

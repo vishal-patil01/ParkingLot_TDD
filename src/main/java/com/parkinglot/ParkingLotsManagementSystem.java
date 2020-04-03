@@ -79,19 +79,19 @@ public class ParkingLotsManagementSystem {
         informer.register(observer);
     }
 
-    public ArrayList<Integer> findVehicleByColour(String colour) {
+    public ArrayList<String> findVehicleByColour(String colour) {
         for (ParkingLots lot : parkingLotsList)
             return lot.findVehicleByColor(colour);
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
-    public ArrayList<Integer> findVehicleByModelNumber(String modelNumber) {
+    public ArrayList<String> findVehicleByModelNumber(String modelNumber) {
         for (ParkingLots lot : parkingLotsList)
             return lot.findVehicleByModelNumber(modelNumber);
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
-    public ArrayList<Integer> findVehicleParkedInLast30Minutes() {
+    public ArrayList<String> findVehicleParkedInLast30Minutes() {
         for (ParkingLots lot : parkingLotsList)
             return lot.findVehicleParkedInLast30Minutes();
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
@@ -100,6 +100,11 @@ public class ParkingLotsManagementSystem {
     public ArrayList<String> findVehicleByMultipleFieldNames(String color, String model) {
         for (ParkingLots lot : parkingLotsList)
             return lot.findByFieldNames(color,model);
+        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+    }
+    public ArrayList<String> findVehicleByVehicleTypeAndDriverType(VehicleType vehicleType, DriverTypes driverType) {
+        for (ParkingLots lot : parkingLotsList)
+            return lot.findByFieldByVehicleTypeAndDriverType(vehicleType,driverType);
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 

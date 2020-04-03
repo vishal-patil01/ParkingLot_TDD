@@ -1,5 +1,7 @@
 package com.parkinglot.dao;
 
+import com.parkinglot.enums.VehicleType;
+
 public class Vehicle {
     private String color;
     private String numberPlate;
