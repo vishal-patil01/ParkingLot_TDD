@@ -283,8 +283,8 @@ public class IntegrationTestParkingLotSystem {
         Vehicle vehicle3 = new Vehicle("White");
         parkingLot.setParkingLotCapacity(6);
         ArrayList<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("SlotNumber: "+2);
-        expectedVehicles.add("SlotNumber: "+4);
+        expectedVehicles.add("SlotNumber: " + 2);
+        expectedVehicles.add("SlotNumber: " + 4);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
@@ -298,28 +298,29 @@ public class IntegrationTestParkingLotSystem {
     public void givenVehicleModelNumberAndColor_WhenFindVehicleAccordinglyModelNumberAndColor_ShouldReturnFilteredVehicleInformation() {
         parkingLot.setParkingLotCapacity(5);
         ArrayList<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add(4+" " +"MH-12-V123");
-        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota"  );
-        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW"  );
-        Vehicle vehicle3 = new Vehicle("blue","MH-12-V123", "toyota"  );
-        Vehicle vehicle4 = new Vehicle("white", "xy123", "BMW"  );
+        expectedVehicles.add(4 + " " + "MH-12-V123");
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
+        Vehicle vehicle4 = new Vehicle("white", "xy123", "BMW");
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle4, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.LARGE);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByMultipleFieldNames("blue","toyota");
+        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByMultipleFieldNames("blue", "toyota");
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
+
     //uc14
     @Test
     public void givenVehicleModel_WhenFindVehicleAccordinglyModel_ShouldReturnVehicleSlotNumber() {
         parkingLot.setParkingLotCapacity(5);
         ArrayList<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("SlotNumber: "+1);
-        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota" );
-        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW"  );
-        Vehicle vehicle3 = new Vehicle("blue","MH-12-V123", "toyota"  );
+        expectedVehicles.add("SlotNumber: " + 1);
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
@@ -329,15 +330,15 @@ public class IntegrationTestParkingLotSystem {
 
     //uc15
     @Test
-    public void givenVehicles_WhenFindVehicleAccordinglyParkedInLast30Minutes_ShouldReturnVehicleSlotNumber() {
+    public void givenParkingLots_WhenFindVehiclesAccordinglyParkedInLast30Minutes_ShouldReturnVehicleSlotNumber() {
         parkingLot.setParkingLotCapacity(5);
         ArrayList<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("SlotNumber: "+1);
-        expectedVehicles.add("SlotNumber: "+3);
-        expectedVehicles.add("SlotNumber: "+4);
-        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota" );
-        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW"  );
-        Vehicle vehicle3 = new Vehicle("blue","MH-12-V123", "toyota" );
+        expectedVehicles.add("SlotNumber: " + 1);
+        expectedVehicles.add("SlotNumber: " + 3);
+        expectedVehicles.add("SlotNumber: " + 4);
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
@@ -347,17 +348,35 @@ public class IntegrationTestParkingLotSystem {
 
     //uc16
     @Test
-    public void givenVehicles_WhenFindVehicleAccordinglySmallVehicleAndHandicapDriverType_ShouldReturnVehicleDetails() {
+    public void givenParkingLots_WhenFindVehiclesAccordinglySmallVehicleAndHandicapDriverType_ShouldReturnVehicleDetails() {
         parkingLot.setParkingLotCapacity(5);
         ArrayList<String> expectedVehicles = new ArrayList<>();
         expectedVehicles.add("0 MH-19 toyota white");
-        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota" );
-        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW" );
-        Vehicle vehicle3 = new Vehicle("blue","MH-12-V123", "toyota");
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.HANDICAP, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByVehicleTypeAndDriverType(VehicleType.SMALL,DriverTypes.HANDICAP);
+        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByVehicleTypeAndDriverType(VehicleType.SMALL, DriverTypes.HANDICAP);
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+
+    //uc17
+    @Test
+    public void givenParkingLots_WhenFindParkedVehicles_ShouldReturnVehiclesDetails() {
+        parkingLot.setParkingLotCapacity(5);
+        ArrayList<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("0 MH-19 toyota white");
+        expectedVehicles.add("2 MH-12 BMW blue");
+        expectedVehicles.add("4 MH-12-V123 toyota blue");
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
+        parkingLotsManagementSystem.park(vehicle1, DriverTypes.HANDICAP, VehicleType.SMALL);
+        parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
+        parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
+        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findAllParkedVehicles();
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 }

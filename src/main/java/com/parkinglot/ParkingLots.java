@@ -96,7 +96,7 @@ public class ParkingLots {
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
                 .filter(slot -> Objects.equals(vehiclesList.get(slot).getVehicle().getColor(), colour))
-                .mapToObj(slot -> "SlotNumber: "+slot)
+                .mapToObj(slot -> "SlotNumber: " + slot)
                 .forEach(filteredVehicleDetailsList::add);
         return filteredVehicleDetailsList;
     }
@@ -105,7 +105,7 @@ public class ParkingLots {
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
                 .filter(slot -> Objects.equals(vehiclesList.get(slot).getVehicle().getModelName(), modelNumber))
-                .mapToObj(slot -> "SlotNumber: "+slot)
+                .mapToObj(slot -> "SlotNumber: " + slot)
                 .forEach(filteredVehicleDetailsList::add);
         return filteredVehicleDetailsList;
     }
@@ -115,7 +115,7 @@ public class ParkingLots {
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
                 .filter(slot -> toMinutes - vehiclesList.get(slot).getParkedTime() <= 30)
-                .mapToObj(slot -> "SlotNumber: "+slot)
+                .mapToObj(slot -> "SlotNumber: " + slot)
                 .forEach(filteredVehicleDetailsList::add);
         return filteredVehicleDetailsList;
     }
@@ -139,4 +139,14 @@ public class ParkingLots {
                 .forEach(filteredVehicleDetailsList::add);
         return filteredVehicleDetailsList;
     }
+
+    public ArrayList<String> findAllParkedVehicles() {
+        IntStream.range(0, vehiclesList.size())
+                .filter(slot -> vehiclesList.get(slot) != null)
+                .mapToObj(slot -> (slot + " " + vehiclesList.get(slot).getVehicle().getNumberPlate() + " " + vehiclesList.get(slot).getVehicle().getModelName() + " " + vehiclesList.get(slot).getVehicle().getColor()))
+                .forEach(filteredVehicleDetailsList::add);
+        return filteredVehicleDetailsList;
+    }
+
+
 }

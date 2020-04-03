@@ -99,13 +99,19 @@ public class ParkingLotsManagementSystem {
 
     public ArrayList<String> findVehicleByMultipleFieldNames(String color, String model) {
         for (ParkingLots lot : parkingLotsList)
-            return lot.findByFieldNames(color,model);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
-    }
-    public ArrayList<String> findVehicleByVehicleTypeAndDriverType(VehicleType vehicleType, DriverTypes driverType) {
-        for (ParkingLots lot : parkingLotsList)
-            return lot.findByFieldByVehicleTypeAndDriverType(vehicleType,driverType);
+            return lot.findByFieldNames(color, model);
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
+    public ArrayList<String> findVehicleByVehicleTypeAndDriverType(VehicleType vehicleType, DriverTypes driverType) {
+        for (ParkingLots lot : parkingLotsList)
+            return lot.findByFieldByVehicleTypeAndDriverType(vehicleType, driverType);
+        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+    }
+
+    public ArrayList<String> findAllParkedVehicles() {
+        for (ParkingLots lot : parkingLotsList)
+            return lot.findAllParkedVehicles();
+        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+    }
 }
