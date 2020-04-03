@@ -90,16 +90,25 @@ public class ParkingLots {
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
-    public ArrayList<Integer> findByFieldName(String fieldName) {
+    public ArrayList<Integer> findVehicleByColor(String colour) {
         ArrayList<Integer> filteredVehicleDetailsList = new ArrayList<>();
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
-                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getColor(), fieldName))
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getColor(), colour))
                 .forEach(filteredVehicleDetailsList::add);
         return filteredVehicleDetailsList;
     }
 
-    public ArrayList<String> findByFieldName(String color, String modelName) {
+    public ArrayList<Integer> findVehicleByModelNumber(String modelNumber) {
+        ArrayList<Integer> filteredVehicleDetailsList = new ArrayList<>();
+        IntStream.range(0, vehiclesList.size())
+                .filter(slot -> vehiclesList.get(slot) != null)
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getModelName(), modelNumber))
+                .forEach(filteredVehicleDetailsList::add);
+        return filteredVehicleDetailsList;
+    }
+
+    public ArrayList<String> findByFieldNames(String color, String modelName) {
         ArrayList<String> filteredVehicleDetailsList = new ArrayList<>();
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)

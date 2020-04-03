@@ -289,7 +289,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-        ArrayList<Integer> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByColor("White");
+        ArrayList<Integer> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByColour("White");
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -303,14 +303,28 @@ public class IntegrationTestParkingLotSystem {
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue","MH-12-V123", "toyota");
         Vehicle vehicle4 = new Vehicle("white", "xy123", "BMW");
-
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle4, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByMultipleValue("blue","toyota");
+        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByMultipleFieldNames("blue","toyota");
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+    //uc14
+    @Test
+    public void givenVehicleModel_WhenFindVehicleAccordinglyModel_ShouldReturnVehicleSlotNumber() {
+        parkingLot.setParkingLotCapacity(5);
+        ArrayList<Integer> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add(1);
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue","MH-12-V123", "toyota");
+        parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
+        parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
+        parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
+        ArrayList<Integer> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByModelNumber("BMW");
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 }

@@ -48,18 +48,6 @@ public class ParkingLotsManagementSystem {
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
-    public ArrayList<Integer> findVehicleByColor(String color) {
-        for (ParkingLots lot : parkingLotsList)
-            return lot.findByFieldName(color);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<String> findVehicleByMultipleValue(String color,String model) {
-        for (ParkingLots lot : parkingLotsList)
-            return lot.findByFieldName(color,model);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
-    }
-
     public boolean unPark(Vehicle vehicle) {
         for (ParkingLots parkingLots : this.parkingLotsList) {
             return parkingLots.unPark(vehicle);
@@ -90,4 +78,23 @@ public class ParkingLotsManagementSystem {
     public void register(ParkingLotObservers observer) {
         informer.register(observer);
     }
+
+    public ArrayList<Integer> findVehicleByColour(String colour) {
+        for (ParkingLots lot : parkingLotsList)
+            return lot.findVehicleByColor(colour);
+        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+    }
+
+    public ArrayList<Integer> findVehicleByModelNumber(String modelNumber) {
+        for (ParkingLots lot : parkingLotsList)
+            return lot.findVehicleByModelNumber(modelNumber);
+        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+    }
+
+    public ArrayList<String> findVehicleByMultipleFieldNames(String color, String model) {
+        for (ParkingLots lot : parkingLotsList)
+            return lot.findByFieldNames(color,model);
+        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+    }
+
 }
