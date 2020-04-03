@@ -10,6 +10,7 @@ public enum VehicleType {
             ArrayList<Integer> modifiedEmptySlotsList = new ArrayList<>();
             IntStream.range(0, list.size() - 3)
                     .filter(i -> (list.get(i + 2) - list.get(i) + 1) == 3).forEach(i -> modifiedEmptySlotsList.add(i + 1));
+            System.out.println(modifiedEmptySlotsList);
             return (modifiedEmptySlotsList.size() > 0) ? modifiedEmptySlotsList : SMALL.getParkingLotsList(list);
         }
     },
@@ -19,6 +20,7 @@ public enum VehicleType {
             return emptySlotsList;
         }
     };
+
     public abstract ArrayList<Integer> getParkingLotsList(ArrayList<Integer> list);
 }
 

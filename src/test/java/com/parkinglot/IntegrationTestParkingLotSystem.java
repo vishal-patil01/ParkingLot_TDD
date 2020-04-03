@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
@@ -183,7 +184,7 @@ public class IntegrationTestParkingLotSystem {
     //UC8
     @Test
     public void givenVehicleForParking_WhenVehicleParkedTimeIsSet_ShouldReturnParkingTime() {
-        int parkingTime = (int) ((System.currentTimeMillis() / (1000 * 60)) % 60);
+        int parkingTime = (int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
         parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
         int vehicleParkingTime = parkingLotsManagementSystem.getVehicleParkingTime(vehicle);
         assertEquals(parkingTime, vehicleParkingTime);
@@ -325,6 +326,24 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         ArrayList<Integer> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleByModelNumber("BMW");
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+    //uc15
+    @Test
+    public void givenVehicles_WhenFindVehicleAccordinglyParkedInLast30Minutes_ShouldReturnVehicleSlotNumber() {
+        parkingLot.setParkingLotCapacity(5);
+        ArrayList<Integer> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add(1);
+        expectedVehicles.add(3);
+        expectedVehicles.add(4);
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue","MH-12-V123", "toyota");
+        parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
+        parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
+        parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
+        System.out.println(parkingLot.vehiclesList.get(1).parkedTime);
+        ArrayList<Integer> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.findVehicleParkedInLast30Minutes();
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 }

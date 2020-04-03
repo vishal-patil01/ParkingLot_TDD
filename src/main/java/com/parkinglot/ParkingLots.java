@@ -10,6 +10,7 @@ import com.parkinglot.exceptions.ParkingLotException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -104,6 +105,16 @@ public class ParkingLots {
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
                 .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getModelName(), modelNumber))
+                .forEach(filteredVehicleDetailsList::add);
+        return filteredVehicleDetailsList;
+    }
+
+    public ArrayList<Integer> findVehicleParkedInLast30Minutes() {
+        long toMinutes =(int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
+        ArrayList<Integer> filteredVehicleDetailsList = new ArrayList<>();
+        IntStream.range(0, vehiclesList.size())
+                .filter(slot -> vehiclesList.get(slot) != null)
+                .filter(slot -> toMinutes-vehiclesList.get(slot).parkedTime<=30)
                 .forEach(filteredVehicleDetailsList::add);
         return filteredVehicleDetailsList;
     }

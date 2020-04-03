@@ -1,12 +1,14 @@
 package com.parkinglot.dao;
 
+import java.util.concurrent.TimeUnit;
+
 public class ParkingSlot {
     public Vehicle vehicle;
     public int parkedTime;
 
     public ParkingSlot(Vehicle vehicle) {
         this.vehicle = vehicle;
-        this.parkedTime = (int) ((System.currentTimeMillis() / (1000 * 60)) % 60);
+        this.parkedTime = (int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
     }
 
     @Override

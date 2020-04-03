@@ -91,6 +91,12 @@ public class ParkingLotsManagementSystem {
         throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 
+    public ArrayList<Integer> findVehicleParkedInLast30Minutes() {
+        for (ParkingLots lot : parkingLotsList)
+            return lot.findVehicleParkedInLast30Minutes();
+        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+    }
+
     public ArrayList<String> findVehicleByMultipleFieldNames(String color, String model) {
         for (ParkingLots lot : parkingLotsList)
             return lot.findByFieldNames(color,model);
