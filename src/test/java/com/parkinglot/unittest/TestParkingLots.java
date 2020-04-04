@@ -1,9 +1,10 @@
 package com.parkinglot.unittest;
 
-import com.parkinglot.dao.Vehicle;
-import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.ParkingLots;
 import com.parkinglot.ParkingLotsManagementSystem;
+import com.parkinglot.dao.ParkingSlot;
+import com.parkinglot.dao.Vehicle;
+import com.parkinglot.enums.DriverTypes;
 import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exceptions.ParkingLotException;
 import org.junit.Before;
@@ -14,15 +15,16 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.stubbing.Answer;
 
+import java.time.LocalDateTime;
+
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class TestParkingLots {
     @Mock
-    ParkingLotsManagementSystem parkingLotsManagementSystem;
+    ParkingSlot parkingSlot;
     ParkingLots parkingLots;
-    DriverTypes driverTypes;
     Vehicle vehicle;
 
     @Rule
@@ -30,39 +32,33 @@ public class TestParkingLots {
 
     @Before
     public void setup() {
-        parkingLotsManagementSystem = mock(ParkingLotsManagementSystem.class);
+        parkingLots = new ParkingLots(3);
+        parkingSlot = mock(ParkingSlot.class);
         vehicle = new Vehicle();
-        parkingLots = new ParkingLots(2);
     }
 
-    @Test
-    public void testParkFunction() {
-        doAnswer((Answer<Boolean>) invocationOnMock -> {
-            parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-            return true;
-        }).when(parkingLotsManagementSystem).park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-        boolean isParked = parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-        assertTrue(isParked);
-    }
-
-    @Test
-    public void testUnParkFunction() {
-        when(parkingLotsManagementSystem.unPark(vehicle)).thenReturn(true);
-        parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-        boolean isParked = parkingLotsManagementSystem.unPark(vehicle);
-        assertTrue(isParked);
-    }
-
-    @Test
-    public void testFindVehicleFunction() {
-        doAnswer((Answer<Void>) invocationOnMock -> {
-            parkingLots.findVehicle(vehicle);
-            return null;
-        }).when(parkingLotsManagementSystem).findVehicle(vehicle);
-        try {
-            parkingLotsManagementSystem.findVehicle(vehicle);
-        } catch (ParkingLotException e) {
-            assertSame(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
-        }
-    }
+//    @Test
+//    public void testParkFunction() {
+//        when(new ParkingSlot(vehicle)).thenReturn(new ParkingSlot(vehicle, VehicleType.SMALL, DriverTypes.NORMAL));
+//        boolean park = parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+//        assertTrue(park);
+//    }
+//
+//    @Test
+//    public void testUnParkFunction() {
+//        when(parkingLotsManagementSystem.getParkingLotHavingMaxSpace()).thenReturn(new ParkingLots(2));
+//        parkingLots = parkingLotsManagementSystem.getParkingLotHavingMaxSpace();
+//        parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+//        boolean unPark = parkingLots.unPark(vehicle);
+//        assertTrue(unPark);
+//    }
+//
+//    @Test
+//    public void testFindVehicleFunction() {
+//        when(parkingLotsManagementSystem.getParkingLotHavingMaxSpace()).thenReturn(new ParkingLots(2));
+//        parkingLots = parkingLotsManagementSystem.getParkingLotHavingMaxSpace();
+//        parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+//        int vehicle = parkingLots.findVehicle(this.vehicle);
+//        assertSame(1, vehicle);
+//    }
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.IntPredicate;
+import java.util.stream.Collectors;
 
 public class ParkingLotsManagementSystem {
     List<ParkingLots> parkingLotsList;
@@ -35,31 +36,27 @@ public class ParkingLotsManagementSystem {
     }
 
     public boolean isVehicleParked(Vehicle vehicle) {
-        for (ParkingLots parkingLots : this.parkingLotsList) {
-            if (parkingLots.isVehicleParked(vehicle))
-                return true;
-        }
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+        return parkingLotsList.stream().filter(lots -> lots.isVehicleParked(vehicle)).map(slot -> true).collect(Collectors.toList()).get(0);
     }
 
     public int findVehicle(Vehicle vehicle) {
-        for (ParkingLots parkingLots : this.parkingLotsList)
-            if (parkingLots.isVehicleParked(vehicle))
-                return parkingLots.findVehicle(vehicle);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+        return parkingLotsList.stream().filter(lots -> lots.findVehicle(vehicle) != -1).map(lots -> lots.findVehicle(vehicle)).collect(Collectors.toList()).get(0);
     }
 
     public boolean unPark(Vehicle vehicle) {
-        for (ParkingLots parkingLots : this.parkingLotsList) {
-            return parkingLots.unPark(vehicle);
-        }
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+        return parkingLotsList.stream().filter(lots -> lots.unPark(vehicle)).map(slot -> true).collect(Collectors.toList()).get(0);
     }
 
     public int getVehicleParkingTime(Vehicle vehicle) {
-        for (ParkingLots parkingLots : this.parkingLotsList)
-            return parkingLots.getVehicleParkingTime(vehicle);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+        return parkingLotsList.stream().filter(lots -> lots.getVehicleParkingTime(vehicle) != -1).map(lots -> lots.getVehicleParkingTime(vehicle)).collect(Collectors.toList()).get(0);
+    }
+
+    public void register(ParkingLotObservers observer) {
+        informer.register(observer);
+    }
+
+    public List<String> filterByPredicate(IntPredicate intPredicate) {
+        return parkingLotsList.stream().map(lots -> lots.filterByPredicate(intPredicate)).collect(Collectors.toList()).get(0);
     }
 
     public ParkingLots getParkingLotHavingMaxSpace() {
@@ -74,15 +71,5 @@ public class ParkingLotsManagementSystem {
             parkingLots = parkingLotsList.get(0);
         }
         return parkingLots;
-    }
-
-    public void register(ParkingLotObservers observer) {
-        informer.register(observer);
-    }
-
-    public List<String> filterByPredicate(IntPredicate intPredicate) {
-        for (ParkingLots lot : parkingLotsList)
-            return lot.filterByPredicate(intPredicate);
-        throw new ParkingLotException("VEHICLE IS NOT AVAILABLE", ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
     }
 }

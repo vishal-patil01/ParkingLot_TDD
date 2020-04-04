@@ -1,7 +1,5 @@
 package com.parkinglot.dao;
 
-import com.parkinglot.enums.VehicleType;
-
 public class Vehicle {
     private String color;
     private String numberPlate;
@@ -16,10 +14,6 @@ public class Vehicle {
         this.modelName = modelName;
     }
 
-    public Vehicle(String color) {
-        this.color = color;
-    }
-
     public String getColor() {
         return color;
     }
@@ -30,5 +24,12 @@ public class Vehicle {
 
     public String getModelName() {
         return modelName;
+    }
+
+    @Override
+    public String toString() {
+        return  "color='" + color + '\'' +
+                ", numberPlate='" + numberPlate + '\'' +
+                " modelName='" + modelName+ '\'';
     }
 }

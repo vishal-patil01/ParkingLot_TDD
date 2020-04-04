@@ -21,7 +21,7 @@ public class ParkingSlot {
         this.parkedTime = (int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
         this.driverType = DriverTypes.HANDICAP;
         this.vehicleType = vehicleType;
-        this.driverType=driverType;
+        this.driverType = driverType;
     }
 
     public Vehicle getVehicle() {
@@ -46,5 +46,12 @@ public class ParkingSlot {
         if (o == null || getClass() != o.getClass()) return false;
         ParkingSlot that = (ParkingSlot) o;
         return vehicle.equals(that.vehicle);
+    }
+
+    @Override
+    public String toString() {
+        return  "parkedTime=" + parkedTime +
+                ", vehicleType=" + vehicleType +
+                ", driverType=" + driverType;
     }
 }

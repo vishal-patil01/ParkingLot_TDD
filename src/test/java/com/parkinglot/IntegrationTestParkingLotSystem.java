@@ -43,12 +43,23 @@ public class IntegrationTestParkingLotSystem {
     }
 
     @Test
-    public void givenVehicle_WhenAlReadyParked_ShouldReturnFalse() {
+    public void givenVehicle_WhenAlReadyParked_ShouldThrowVehicleAlreadyParkedException() {
         try {
             parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
             parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
         } catch (ParkingLotException e) {
             assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED, e.exceptionTypes);
+        }
+    }
+    @Test
+    public void givenVehicles_WhenParkingLotFull_ShouldThrowParkingLotFullException() {
+        try {
+            parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+            parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
+            parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
+            parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
+        } catch (ParkingLotException e) {
+            assertEquals(ParkingLotException.ExceptionTypes.PARKING_LOT_FULL, e.exceptionTypes);
         }
     }
 
@@ -273,7 +284,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
-        ArrayList<Integer> emptyParkingSlots = parkingLot.getListOfEmptyParkingSlots();
+        List<Integer> emptyParkingSlots = parkingLot.getListOfEmptyParkingSlots();
         assertEquals(expectedVehicles, emptyParkingSlots);
     }
 
@@ -284,8 +295,8 @@ public class IntegrationTestParkingLotSystem {
         Vehicle vehicle3 = new Vehicle("White", "MH-12-V123", "toyota");
         parkingLot.setParkingLotCapacity(6);
         List<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("2 MH-12-V123 toyota White");
-        expectedVehicles.add("4 MH-12 BMW White");
+        expectedVehicles.add("SlotNumber=2 color='White', numberPlate='MH-12-V123' modelName='toyota'");
+        expectedVehicles.add("SlotNumber=4 color='White', numberPlate='MH-12' modelName='BMW'");
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
@@ -299,7 +310,7 @@ public class IntegrationTestParkingLotSystem {
     public void givenVehicleModelNumberAndColor_WhenFindVehicleAccordinglyModelNumberAndColor_ShouldReturnFilteredVehicleInformation() {
         parkingLot.setParkingLotCapacity(5);
         List<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("4 MH-12-V123 toyota blue");
+        expectedVehicles.add("SlotNumber=4 color='blue', numberPlate='MH-12-V123' modelName='toyota'");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
@@ -318,7 +329,7 @@ public class IntegrationTestParkingLotSystem {
     public void givenVehicleModel_WhenFindVehicleAccordinglyModel_ShouldReturnVehicleSlotNumber() {
         parkingLot.setParkingLotCapacity(5);
         List<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("1 MH-12 BMW blue");
+        expectedVehicles.add("SlotNumber=1 color='blue', numberPlate='MH-12' modelName='BMW'");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
@@ -334,9 +345,9 @@ public class IntegrationTestParkingLotSystem {
     public void givenParkingLots_WhenFindVehiclesAccordinglyParkedInLast30Minutes_ShouldReturnVehicleSlotNumber() {
         parkingLot.setParkingLotCapacity(5);
         List<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("1 MH-12 BMW blue");
-        expectedVehicles.add("3 MH-12-V123 toyota blue");
-        expectedVehicles.add("4 MH-19 toyota white");
+        expectedVehicles.add("SlotNumber=1 color='blue', numberPlate='MH-12' modelName='BMW'");
+        expectedVehicles.add("SlotNumber=3 color='blue', numberPlate='MH-12-V123' modelName='toyota'");
+        expectedVehicles.add("SlotNumber=4 color='white', numberPlate='MH-19' modelName='toyota'");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
@@ -352,7 +363,7 @@ public class IntegrationTestParkingLotSystem {
     public void givenParkingLots_WhenFindVehiclesAccordinglySmallVehicleAndHandicapDriverType_ShouldReturnVehicleDetails() {
         parkingLot.setParkingLotCapacity(5);
         List<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("0 MH-19 toyota white");
+        expectedVehicles.add("SlotNumber=0 color='white', numberPlate='MH-19' modelName='toyota'");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
@@ -368,9 +379,9 @@ public class IntegrationTestParkingLotSystem {
     public void givenParkingLots_WhenFindParkedVehicles_ShouldReturnVehiclesDetails() {
         parkingLot.setParkingLotCapacity(5);
         List<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add("0 MH-19 toyota white");
-        expectedVehicles.add("2 MH-12 BMW blue");
-        expectedVehicles.add("4 MH-12-V123 toyota blue");
+        expectedVehicles.add("SlotNumber=0 color='white', numberPlate='MH-19' modelName='toyota'");
+        expectedVehicles.add("SlotNumber=2 color='blue', numberPlate='MH-12' modelName='BMW'");
+        expectedVehicles.add("SlotNumber=4 color='blue', numberPlate='MH-12-V123' modelName='toyota'");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
