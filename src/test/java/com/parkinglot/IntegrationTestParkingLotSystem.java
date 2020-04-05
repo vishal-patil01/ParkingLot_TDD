@@ -301,7 +301,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(colorFilter("White"));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("colour","White"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -320,7 +320,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle4, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.LARGE);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(modelNumberAndColorFilter("toyota", "blue"));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("modelNumber&color","toyota", "blue"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -336,7 +336,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(modelNumberFilter("BMW"));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("modelNumber","BMW"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -354,7 +354,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(parkingTimeFilter(30));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("parkingTime","30"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -370,7 +370,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.HANDICAP, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(filterByVehicleTypeAndDriverType(VehicleType.SMALL, DriverTypes.HANDICAP));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("vehicleType&DriverType","SMALL","HANDICAP"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -388,7 +388,7 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.HANDICAP, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(filterByParkedVehicles());
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("default"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 }

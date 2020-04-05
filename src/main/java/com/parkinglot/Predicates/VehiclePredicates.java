@@ -16,30 +16,23 @@ public class VehiclePredicates {
         vehiclesList = vehicles;
     }
 
-    public static IntPredicate filterByParkedVehicles() {
-        return slot -> vehiclesList.get(slot) != null;
-    }
-
-    public static IntPredicate colorFilter(String color) {
-        return slot -> Objects.equals(vehiclesList.get(slot).getVehicle().getColor(), color);
-    }
-
-    public static IntPredicate modelNumberAndColorFilter(String modelNumber, String color) {
-        return slot -> Objects.equals(vehiclesList.get(slot).getVehicle().getModelName(), modelNumber)
-                && Objects.equals(vehiclesList.get(slot).getVehicle().getColor(), color);
-    }
-
-    public static IntPredicate modelNumberFilter(String modelNumber) {
-        return slot -> Objects.equals(vehiclesList.get(slot).getVehicle().getModelName(), modelNumber);
-    }
-
-    public static IntPredicate parkingTimeFilter(int timeInMinutes) {
-        long currentTimeInMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
-        return slot -> currentTimeInMinutes - vehiclesList.get(slot).getParkedTime() <= timeInMinutes;
-    }
-
-    public static IntPredicate filterByVehicleTypeAndDriverType(VehicleType vehicleType, DriverTypes driverType) {
-        return slot -> Objects.equals(vehiclesList.get(slot).getVehicleType(), vehicleType) &&
-                Objects.equals(vehiclesList.get(slot).getDriverType(), driverType);
+    public static IntPredicate getPredicates(String type, String... args) {
+        switch (type) {
+            case "colour":
+                return slot -> Objects.equals(vehiclesList.get(slot).getVehicle().getColor(), args[0]);
+            case "modelNumber&color":
+                return slot -> Objects.equals(vehiclesList.get(slot).getVehicle().getModelName(), args[0])
+                        && Objects.equals(vehiclesList.get(slot).getVehicle().getColor(), args[1]);
+            case "modelNumber":
+                return slot -> Objects.equals(vehiclesList.get(slot).getVehicle().getModelName(), args[0]);
+            case "parkingTime":
+                long currentTimeInMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
+                return slot -> currentTimeInMinutes - vehiclesList.get(slot).getParkedTime() <= Integer.parseInt(args[0]);
+            case "vehicleType&DriverType":
+                return slot -> Objects.equals(vehiclesList.get(slot).getVehicleType(), VehicleType.valueOf(args[0])) &&
+                        Objects.equals(vehiclesList.get(slot).getDriverType(), DriverTypes.valueOf(args[1]));
+            default:
+                return slot -> vehiclesList.get(slot) != null;
+        }
     }
 }
