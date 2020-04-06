@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.parkinglot.Predicates.VehiclePredicates.*;
+import static com.parkinglot.Predicates.VehiclePredicates.getPredicates;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
 
@@ -51,6 +51,7 @@ public class IntegrationTestParkingLotSystem {
             assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_ALREADY_PARKED, e.exceptionTypes);
         }
     }
+
     @Test
     public void givenVehicles_WhenParkingLotFull_ShouldThrowParkingLotFullException() {
         try {
@@ -301,8 +302,20 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("colour","White"));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("colour", "White"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+
+    @Test
+    public void givenParkingLots_WhenFindVehiclesAccordinglyColorNotFound_ShouldThrowExceptions() {
+        try {
+            parkingLot.setParkingLotCapacity(5);
+            Vehicle vehicle2 = new Vehicle("red", "MH-12", "toyota");
+            parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
+            parkingLotsManagementSystem.filterByPredicate(getPredicates("color", "blue"));
+        } catch (ParkingLotException e) {
+            assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
+        }
     }
 
     //uc13
@@ -320,8 +333,20 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle4, DriverTypes.NORMAL, VehicleType.LARGE);
         parkingLotsManagementSystem.park(new Vehicle(), DriverTypes.NORMAL, VehicleType.LARGE);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("modelNumber&color","toyota", "blue"));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("modelNumber&color", "toyota", "blue"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+
+    @Test
+    public void givenParkingLots_WhenFindVehiclesAccordinglyModelNumberColorNotFound_ShouldThrowExceptions() {
+        try {
+            parkingLot.setParkingLotCapacity(5);
+            Vehicle vehicle2 = new Vehicle("red", "MH-12", "toyota");
+            parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
+            parkingLotsManagementSystem.filterByPredicate(getPredicates("modelNumber&color", "toyota", "blue"));
+        } catch (ParkingLotException e) {
+            assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
+        }
     }
 
     //uc14
@@ -336,8 +361,20 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.LARGE);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("modelNumber","BMW"));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("modelNumber", "BMW"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+
+    @Test
+    public void givenParkingLots_WhenFindVehiclesAccordinglyModelNumberNotFound_ShouldThrowExceptions() {
+        try {
+            parkingLot.setParkingLotCapacity(5);
+            Vehicle vehicle2 = new Vehicle("blue", "MH-12", "toyota");
+            parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
+            parkingLotsManagementSystem.filterByPredicate(getPredicates("modelNumber", "BMW"));
+        } catch (ParkingLotException e) {
+            assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
+        }
     }
 
     //uc15
@@ -354,8 +391,18 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.NORMAL, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("parkingTime","30"));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("parkingTime", "30"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+
+    @Test
+    public void givenParkingLots_WhenFindVehiclesAccordinglyParkedInLast30MinutesNotFound_ShouldThrowExceptions() {
+        try {
+            parkingLot.setParkingLotCapacity(5);
+            parkingLotsManagementSystem.filterByPredicate(getPredicates("parkingTime", "30"));
+        } catch (ParkingLotException e) {
+            assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
+        }
     }
 
     //uc16
@@ -370,8 +417,22 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle1, DriverTypes.HANDICAP, VehicleType.SMALL);
         parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
-        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("vehicleType&DriverType","SMALL","HANDICAP"));
+        List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("vehicleType&DriverType", "SMALL", "HANDICAP"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+
+    @Test
+    public void givenParkingLots_WhenFindVehiclesOnBasisOfDriverTypeNotFound_ShouldThrowExceptions() {
+        try {
+            parkingLot.setParkingLotCapacity(5);
+            Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+            Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
+            parkingLotsManagementSystem.park(vehicle2, DriverTypes.HANDICAP, VehicleType.LARGE);
+            parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
+            parkingLotsManagementSystem.filterByPredicate(getPredicates("vehicleType&DriverType", "SMALL", "HANDICAP"));
+        } catch (ParkingLotException e) {
+            assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
+        }
     }
 
     //uc17
@@ -390,5 +451,15 @@ public class IntegrationTestParkingLotSystem {
         parkingLotsManagementSystem.park(vehicle3, DriverTypes.NORMAL, VehicleType.SMALL);
         List<String> vehicleDetailsListBasedOnFilters = parkingLotsManagementSystem.filterByPredicate(getPredicates("default"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+
+    @Test
+    public void givenParkingLots_WhenFindParkedVehiclesNotFound_ShouldThrowExceptions() {
+        try {
+            parkingLot.setParkingLotCapacity(5);
+            parkingLotsManagementSystem.filterByPredicate(getPredicates("default"));
+        } catch (ParkingLotException e) {
+            assertEquals(ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND, e.exceptionTypes);
+        }
     }
 }

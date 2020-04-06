@@ -32,33 +32,14 @@ public class TestParkingLots {
 
     @Before
     public void setup() {
-        parkingLots = new ParkingLots(3);
         parkingSlot = mock(ParkingSlot.class);
+        parkingLots = new ParkingLots(3);
         vehicle = new Vehicle();
     }
 
-//    @Test
-//    public void testParkFunction() {
-//        when(new ParkingSlot(vehicle)).thenReturn(new ParkingSlot(vehicle, VehicleType.SMALL, DriverTypes.NORMAL));
-//        boolean park = parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-//        assertTrue(park);
-//    }
-//
-//    @Test
-//    public void testUnParkFunction() {
-//        when(parkingLotsManagementSystem.getParkingLotHavingMaxSpace()).thenReturn(new ParkingLots(2));
-//        parkingLots = parkingLotsManagementSystem.getParkingLotHavingMaxSpace();
-//        parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-//        boolean unPark = parkingLots.unPark(vehicle);
-//        assertTrue(unPark);
-//    }
-//
-//    @Test
-//    public void testFindVehicleFunction() {
-//        when(parkingLotsManagementSystem.getParkingLotHavingMaxSpace()).thenReturn(new ParkingLots(2));
-//        parkingLots = parkingLotsManagementSystem.getParkingLotHavingMaxSpace();
-//        parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
-//        int vehicle = parkingLots.findVehicle(this.vehicle);
-//        assertSame(1, vehicle);
-//    }
+    @Test
+    public void testParkFunction() {
+        boolean park = parkingLots.park(vehicle, DriverTypes.NORMAL, VehicleType.SMALL);
+        assertTrue(park);
+    }
 }

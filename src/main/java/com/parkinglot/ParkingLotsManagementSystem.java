@@ -56,7 +56,10 @@ public class ParkingLotsManagementSystem {
     }
 
     public List<String> filterByPredicate(IntPredicate intPredicate) {
-        return parkingLotsList.stream().map(lots -> lots.filterByPredicate(intPredicate)).collect(Collectors.toList()).get(0);
+        List<String> filteredVehicleList= parkingLotsList.stream().map(lots -> lots.filterByPredicate(intPredicate)).collect(Collectors.toList()).get(0);
+        if(filteredVehicleList.size()==0)
+            throw new ParkingLotException("Vehicle Not Found",ParkingLotException.ExceptionTypes.VEHICLE_NOT_FOUND);
+        return filteredVehicleList;
     }
 
     public ParkingLots getParkingLotHavingMaxSpace() {
